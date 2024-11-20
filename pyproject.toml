@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "soundscapecode"
+version = "0.0.2"
+license = "AGPL-3.0"
+authors = [
+  { name="James Kemp" },
+]
+description = "Python implementation of soundscapecode"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/jpkemp/soundscapecode"
