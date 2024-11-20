@@ -1,0 +1,6 @@
+SoundscapeCode
+--------------
+
+.. soundscapecode::
+
+.. autoclass:: SoundscapeCode

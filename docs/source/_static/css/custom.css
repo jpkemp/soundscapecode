@@ -1,0 +1,25 @@
+@import './theme.css';
+
+.toctree-l1 > a {
+   font-size: 1.2em;
+}
+
+.toctree-wrapper ul {
+   list-style: none !important;
+   margin-left: 0 !important;
+}
+
+.toctree-l1 li {
+   list-style: none !important;
+   margin-left: 0 !important;
+}
+
+.rstcontent ul {
+   list-style: none !important;
+   margin-left: 0 !important;
+}
+
+.rstcontent li {
+   list-style: none !important;
+   margin-left: 0 !important;
+}
