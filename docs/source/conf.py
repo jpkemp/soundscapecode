@@ -17,7 +17,7 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
 ]
 autosummary_generate = True
 autosummary_imported_members = True
@@ -32,4 +32,4 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css',
 ]
-html_style = 'css/custom.css'
+# html_style = 'css/custom.css'

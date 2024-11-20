@@ -7,26 +7,22 @@
 soundscapecode
 **************
 
-.. toctree::
-   usage
-   testing
-
-.. autosummary::
-   :toctree: _autosummary
-   :template: custom-module-template.rst
-   :recursive:
-
-   soundscapecode
+.. currentmodule:: soundscapecode
+.. automodule:: soundscapecode
+.. include:: usage.rst
 
 .. autosummary::
    :toctree: _autosummary
    :template: custom-class-template.rst
-   :recursive:
 
-   .SoundscapeCode
+   SoundscapeCode
 
 .. autosummary::
    :toctree: _autosummary
-   :recursive:
 
-   .max_spl
+   max_spl
+   rms_spl
+   periodicity
+   kurtosis
+   temporal_dissimilarity
+
