@@ -29,9 +29,6 @@ for dt in soundscape["dt"]:
     print(dt)
 ```
 
-## Testing
-Testing has been conducted against the values produced in the Matlab version. To run the tests, export the *broad*, *fish*, and *invertebrate* variables to csv and add them to the data folder, as well as the output file.
-
 ## Limitations
 Spectral dissimilarity and, therefore, dissimilarity are not currently implemented.
 

@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soundscapecode &mdash; soundscapecode 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=24957830" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="soundscapecode.SoundscapeCode" href="_autosummary/soundscapecode.SoundscapeCode.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            soundscapecode
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.SoundscapeCode.html">soundscapecode.SoundscapeCode</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.max_spl.html">soundscapecode.max_spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.rms_spl.html">soundscapecode.rms_spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.periodicity.html">soundscapecode.periodicity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.kurtosis.html">soundscapecode.kurtosis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_autosummary/soundscapecode.temporal_dissimilarity.html">soundscapecode.temporal_dissimilarity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">soundscapecode</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">soundscapecode</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soundscapecode">
+<span id="soundscapecode"></span><h1>soundscapecode<a class="headerlink" href="#module-soundscapecode" title="Link to this heading"></a></h1>
+<p>Python implemention of the soundscapecode, for analysing ecoacoustic soundscapes.</p>
+<p>See the <a class="reference external" href="https://pubs.aip.org/asa/jasa/article/149/4_Supplement/A72/651895/Introduction-and-application-of-a-proposed-method">paper</a>.
+This implementation is ported from a Matlab <a class="reference external" href="https://www.mathworks.com/matlabcentral/fileexchange/172434-sscmetrics-a-matlab-tool-to-compute-the-soundscape-code">example</a>.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>max_spl: </dt><dd><p>calculates the maximum sound pressure level for a sound</p>
+</dd>
+<dt>rms_spl: </dt><dd><p>calculates the root mean square sound pressure level for a sound</p>
+</dd>
+<dt>periodicity: </dt><dd><p>calculates the periodicity for a sound</p>
+</dd>
+<dt>kurtosis: </dt><dd><p>calculates the kurtosis for a sound</p>
+</dd>
+<dt>temporal_dissimilarity: </dt><dd><p>calculates the temporal dissimilarity between two files</p>
+</dd>
+</dl>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<p>SoundscapeCode: wrapper for calculating all metrics for all one-minute segments in a longer recording</p>
+</section>
+<section id="installation-and-usage">
+<h2>Installation and Usage<a class="headerlink" href="#installation-and-usage" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">soundscapecode</span></code></p>
+<p>Values can be calculated individually:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">soundscapecode</span> <span class="k">as</span> <span class="nn">ssc</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">48000</span>
+<span class="n">mock_sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">fs</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">periodicity</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="n">periodicity</span><span class="p">(</span><span class="n">mock_sound</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or to calculate all values for one recording:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soundscapecode</span> <span class="kn">import</span> <span class="n">SoundscapeCode</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">48000</span>
+<span class="n">n_mins</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">mock_sound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">fs</span><span class="o">*</span><span class="n">n_mins</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">soundscape</span> <span class="o">=</span> <span class="n">SoundscapeCode</span><span class="p">(</span><span class="n">mock_sound</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">soundscape</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/soundscapecode.SoundscapeCode.html#soundscapecode.SoundscapeCode" title="soundscapecode.SoundscapeCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoundscapeCode</span></code></a>(sound, fs)</p></td>
+<td><p>Wrapper for segmenting and calculating soundscape code metrics for a sound.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/soundscapecode.max_spl.html#soundscapecode.max_spl" title="soundscapecode.max_spl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_spl</span></code></a>(data[, reference_sound_pressure])</p></td>
+<td><p>Calculates the maximum instantaneous sound pressure level for sound data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/soundscapecode.rms_spl.html#soundscapecode.rms_spl" title="soundscapecode.rms_spl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rms_spl</span></code></a>(data, fs[, reference_sound_pressure])</p></td>
+<td><p>Calculates the root-mean-squared sound pressure level for sound data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/soundscapecode.periodicity.html#soundscapecode.periodicity" title="soundscapecode.periodicity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">periodicity</span></code></a>(data, fs)</p></td>
+<td><p>Calculates the periodicity for sound data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/soundscapecode.kurtosis.html#soundscapecode.kurtosis" title="soundscapecode.kurtosis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kurtosis</span></code></a>(data)</p></td>
+<td><p>Calculates the kurtosis for sound data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/soundscapecode.temporal_dissimilarity.html#soundscapecode.temporal_dissimilarity" title="soundscapecode.temporal_dissimilarity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temporal_dissimilarity</span></code></a>(data_a, data_b)</p></td>
+<td><p>Calculates the temporal dissimilarity between two sounds.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="_autosummary/soundscapecode.SoundscapeCode.html" class="btn btn-neutral float-right" title="soundscapecode.SoundscapeCode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Kemp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
