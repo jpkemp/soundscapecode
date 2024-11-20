@@ -25,3 +25,5 @@ Or to calculate all values for one recording:
     soundscape = SoundscapeCode(mock_sound, fs)
     for dt in soundscape["dt"]:
         print(dt)
+
+Dissimilarity is not fully implemented; only temporal dissimilarity is currently available.

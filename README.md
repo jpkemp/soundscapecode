@@ -29,6 +29,9 @@ for dt in soundscape["dt"]:
     print(dt)
 ```
 
+## Documentation
+Check the documentation at <a href=https://app.readthedocs.org/projects/soundscapecode/>readthedocs</a>.
+
 ## Limitations
 Spectral dissimilarity and, therefore, dissimilarity are not currently implemented.
 
