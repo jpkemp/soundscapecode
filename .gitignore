@@ -1,4 +1,5 @@
 data/
 .vscode/
-*/__pycache__/
+__pycache__
 dist/
+docs/build

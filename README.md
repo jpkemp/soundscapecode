@@ -30,7 +30,7 @@ for dt in soundscape["dt"]:
 ```
 
 ## Documentation
-<a href=https://soundscapecode.readthedocs.io/en/latest>Read the docs</a>.
+Check the documentation at <a href=https://soundscapecode.readthedocs.io/en/latest>readthedocs</a>.
 
 ## Contact
 Please contact me with any questions
