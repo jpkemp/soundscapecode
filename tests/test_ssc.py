@@ -22,7 +22,10 @@ class TestSoundscapeCode(unittest.TestCase):
             assert len(cls.sounds[band]) == 5
 
         cls.validation = pd.read_csv(f"{test_data}/7255_SoundscapeCode.csv")
-        cls.dt_validation = pd.read_csv("data/temporal_dissimilarity.csv")
+        cls.d_validation = pd.read_csv("data/dissimilarity.csv")
+        cls.pxx_validation = pd.read_csv("data/7255_pxx.csv", header=None)
+        sound = ssc.soundtrap.open_wav(cls.test_file, soundtrap=7255)
+        cls.f, t, cls.pxx = ssc.stft_psd(sound, cls.fs)
 
     def _compare_expected(self, band, sounds, metric, func, kwargs, rounding=7):
         expected = self.validation[f"Files_{metric}_{band}"]
@@ -52,7 +55,7 @@ class TestSoundscapeCode(unittest.TestCase):
 
     def test_temporal_dissimilarity(self):
         for band in self.sounds:
-            expected = self.dt_validation[f"Dt_{band}_Tobs"]
+            expected = self.d_validation[f"Dt_{band}_Tobs"]
             for b in range(1, 4):
                 a = b - 1
                 data_a = self.sounds[band][a]
@@ -61,6 +64,54 @@ class TestSoundscapeCode(unittest.TestCase):
                 ans = round(dt, 4)
                 self.assertAlmostEqual(ans, expected[a])
 
+    def test_psd(self):
+        expected = self.pxx_validation
+        test = self.pxx
+        self.assertEqual(expected.shape, test.shape)
+        self.assertTrue(np.allclose(expected, test))
+
+    def test_mfreq(self):
+        for band, freq_range in self.freq_ranges.items():
+            expected = self.validation[f"Files_D_{band}"]
+            mfreq = ssc.meanfreq(self.pxx, self.f, freq_range)
+            self.assertEqual(expected.shape, mfreq.shape)
+            self.assertTrue(np.allclose(expected, mfreq))
+
+    def test_spectral_dissimilarity(self):
+        for band, freq_range in self.freq_ranges.items():
+            expected = self.d_validation[f"Df_{band}_Tobs"]
+            mfreq = ssc.meanfreq(self.pxx, self.f, freq_range)
+            for b in range(1, 4):
+                a = b - 1
+                freqs = []
+                for idx in (a, b):
+                    lower = idx * 120 # half second intervals, for one min period
+                    upper = lower + 120
+                    freq_part = mfreq[:, :, lower:upper]
+                    freqs.append(freq_part)
+
+                result = ssc.spectral_dissimilarity(*freqs)
+                self.assertAlmostEqual(result, expected[a], places=7)
+
+    def test_dissimilarity(self):
+        for band, freq_range in self.freq_ranges.items():
+            expected = self.validation[f"Files_D_{band}"]
+            mfreq = ssc.meanfreq(self.pxx, self.f, freq_range)
+            for b in range(1, 4):
+                a = b - 1
+                datas = []
+                freqs = []
+                for idx in (a, b):
+                    lower = idx * 120 # half second intervals, for one min period
+                    upper = lower + 120
+                    data = self.sounds[band][idx]
+                    freq_part = mfreq[:, :, lower:upper]
+                    datas.append(data)
+                    freqs.append(freq_part)
+
+                result = ssc.dissimilarity_index(*datas, *freqs)
+                self.assertAlmostEqual(result, expected[a], places=7)
+        
     def test_ssc(self):
         for band, sounds in self.sounds.items():
             full_sound = np.concatenate(sounds)
@@ -81,7 +132,7 @@ class TestSoundscapeCode(unittest.TestCase):
                     test = round(soundscape[metric][i],1)
                     self.assertEqual(test, expected)
 
-            expecteds = self.dt_validation[f"Dt_{band}_Tobs"]
+            expecteds = self.d_validation[f"Dt_{band}_Tobs"]
             for i, expected in enumerate(expecteds[:3]):
                 test = round(soundscape['dt'][i],4)
                 self.assertEqual(test, expected)

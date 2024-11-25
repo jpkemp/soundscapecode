@@ -26,3 +26,17 @@ soundscapecode
    kurtosis
    temporal_dissimilarity
 
+.. automodule:: soundscapecode.soundtrap
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-class-template.rst
+
+   soundtrap.CalibrationData
+
+.. autosummary::
+   :toctree: _autosummary
+
+   soundtrap.soundtrap_conversion
+   soundtrap.get_soundtrap_calibration
+   soundtrap.read_calibration_data
+   soundtrap.open_wav

@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.fft as sp_fft
 from math import log10, sqrt
-from scipy.signal import find_peaks
+from scipy.signal import get_window, spectrogram, find_peaks
 from scipy.stats import kurtosis as spkurtosis
 
 def _hilbert(data, axis=0):
@@ -68,12 +68,64 @@ def _diff(data_a:np.ndarray, data_b:np.ndarray):
 
     return ret
 
+def meanfreq(pxx:np.ndarray, f:np.ndarray, freqrange:tuple[np.ndarray]):
+    width = np.tile(f[1]-f[0], (1, pxx.shape[1]))
+    f = np.reshape(f, (1, -1))
+    P = pxx * width
+    if freqrange:
+        lower = next((idx for idx, freq in enumerate(f) if freq > freqrange[0]), 0)
+        upper = next((idx for idx, freq in enumerate(f) if freq > freqrange[1]), len(f))
+    else:
+        lower = 0
+        upper = f.shape[1]
+
+    pwr = np.sum(P[lower:upper])
+
+    mnfreq = np.dot(P[lower:upper], f[lower:upper]) / pwr
+
+    return mnfreq
+
+def stft_psd(data:np.ndarray, fs:int):
+    '''Calculates the power spectral density of a sound recording.
+
+    Parameters
+    ----------
+    data:np.ndarray 
+        An array-like with shape (n, 1)
+    fs:int
+        The sampling frequency of the data
+
+    Returns
+    -------
+    np.ndarray:
+        frequency vector
+    np.ndarray
+        time vector
+    np.ndarray
+        psd matrix
+
+    Raises
+    ------
+    AttributeError 
+        if the data input is not a vector
+    '''
+    data = _ensure_np(data)
+    window_length = fs
+    window = get_window('hamming', window_length)
+    f, t, pxx = spectrogram(data, fs=fs, window=window, noverlap=window_length/2, mode='psd', 
+            scaling='density', nperseg=window_length, nfft=window_length, axis=0)
+
+    pxx = np.squeeze(pxx)
+
+    
+    return f[1:], t, pxx[1:] 
+
 def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
     '''Calculates the temporal dissimilarity between two sounds.
 
     Parameters
     ----------
-    data_b:np.ndarray 
+    data_a:np.ndarray 
         an array-like with shape (n, 1)
     data_b:np.ndarray 
         an array-like with shape (n, 1)
@@ -116,6 +168,37 @@ def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
     dt = np.abs(_diff(*compare)).sum() / 2
 
     return dt
+
+def spectral_dissimilarity(m_freq_a, m_freq_b):
+    datas = []
+    for mfreq in (m_freq_a, m_freq_b):
+        tobs = np.abs(mfreq) / np.abs(mfreq).sum()
+        datas.append(tobs)
+
+    df = np.abs(_diff(*datas)).sum() / 2
+
+    return df
+
+def dissimilarity_index(data_a:np.ndarray, 
+                        data_b:np.ndarray, 
+                        m_freq_a, 
+                        m_freq_b)->list:
+    if data_a.shape != data_b.shape:
+        raise AttributeError("Vectors must be the same size")
+
+    datas = []
+    for data in [data_a, data_b]:
+        data = _ensure_np(data)
+        datas.append(data)
+
+    dts = temporal_dissimilarity(*datas)
+    dfs = spectral_dissimilarity(m_freq_a, m_freq_b)
+
+    ret = []
+    for i, dt in enumerate(dts):
+        ret.append(dt * dfs[i])
+
+    return ret
 
 def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
     '''Calculates the maximum instantaneous sound pressure level for sound data.

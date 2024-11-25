@@ -17,11 +17,22 @@ periodicity:
 kurtosis: 
     calculates the kurtosis for a sound
 temporal_dissimilarity: 
-    calculates the temporal dissimilarity between two files
+    calculates the temporal dissimilarity between two sound segments
+stft_psd:
+    calculates the power spectral density for a recording
+meanfreq:
+    gets the mean frequency per 0.1s segment in a recording, for a given frequency range
+spectral_dissimilarity:
+    calculates the spectral dissimilarity between two sound segments
+dissimilarity index:
+    calculates the dissimilarity index between two sound segments
+
 
 Classes
 -------
 SoundscapeCode: wrapper for calculating all metrics for all one-minute segments in a longer recording
 '''
-from ._soundscape_code import periodicity, max_spl, rms_spl, kurtosis, temporal_dissimilarity
+from ._soundscape_code import periodicity, max_spl, rms_spl, kurtosis, temporal_dissimilarity, \
+    stft_psd, meanfreq, spectral_dissimilarity, dissimilarity_index
 from ._ssc import SoundscapeCode
+from . import soundtrap
