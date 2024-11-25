@@ -108,7 +108,7 @@ def read_calibration(file_path:str)->CalibrationData:
     FileNotFoundError:
         the given path does not exist     
     '''
-    if not file_path.exists():
+    if not Path(file_path).exists():
         raise FileNotFoundError(f"Cannot find file {file_path}")
 
     with open(file_path, 'r') as f:
@@ -166,7 +166,7 @@ def get_soundtrap_calibration(serial:str, output_path:Path=None)->CalibrationDat
     }
 
     if output_path:
-        with open(output_path, 'w+') as f:
+        with open(output_path, 'w+', encoding='utf-8') as f:
             f.write("{\n")
             for i, (key, val) in enumerate(output.items()):
                 line = f"    \"{key}\": \"{val}\""
