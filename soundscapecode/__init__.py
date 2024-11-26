@@ -8,20 +8,31 @@ This implementation is ported from a Matlab `example`_.
 
 Functions
 ----------
-max_spl: 
+max_spl:
     calculates the maximum sound pressure level for a sound
-rms_spl: 
+rms_spl:
     calculates the root mean square sound pressure level for a sound
-periodicity: 
+periodicity:
     calculates the periodicity for a sound
-kurtosis: 
+kurtosis:
     calculates the kurtosis for a sound
-temporal_dissimilarity: 
-    calculates the temporal dissimilarity between two files
+temporal_dissimilarity:
+    calculates the temporal dissimilarity between two sound segments
+stft_psd:
+    calculates the power spectral density for a recording
+meanfreq:
+    gets the mean frequency per 0.1s segment in a recording, for a given frequency range
+spectral_dissimilarity:
+    calculates the spectral dissimilarity between two sound segments
+dissimilarity index:
+    calculates the dissimilarity index between two sound segments
+
 
 Classes
 -------
 SoundscapeCode: wrapper for calculating all metrics for all one-minute segments in a longer recording
 '''
-from ._soundscape_code import periodicity, max_spl, rms_spl, kurtosis, temporal_dissimilarity
+from ._soundscape_code import periodicity, max_spl, rms_spl, kurtosis, temporal_dissimilarity, \
+    power_spectral_density, meanfreq, spectral_dissimilarity, dissimilarity_index
 from ._ssc import SoundscapeCode
+from . import soundtrap

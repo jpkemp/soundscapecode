@@ -30,10 +30,7 @@ for dt in soundscape["dt"]:
 ```
 
 ## Documentation
-Check the documentation at <a href=https://app.readthedocs.org/projects/soundscapecode/>readthedocs</a>.
-
-## Limitations
-Spectral dissimilarity and, therefore, dissimilarity are not currently implemented.
+Check the documentation at <a href=https://soundscapecode.readthedocs.io/en/latest>readthedocs</a>.
 
 ## Contact
 Please contact me with any questions
