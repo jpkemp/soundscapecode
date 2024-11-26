@@ -68,29 +68,45 @@ def _diff(data_a:np.ndarray, data_b:np.ndarray):
 
     return ret
 
-def meanfreq(pxx:np.ndarray, f:np.ndarray, freqrange:tuple[np.ndarray]):
-    width = np.tile(f[1]-f[0], (1, pxx.shape[1]))
-    f = np.reshape(f, (1, -1))
-    P = pxx * width
-    if freqrange:
-        lower = next((idx for idx, freq in enumerate(f) if freq > freqrange[0]), 0)
-        upper = next((idx for idx, freq in enumerate(f) if freq > freqrange[1]), len(f))
-    else:
-        lower = 0
-        upper = f.shape[1]
-
-    pwr = np.sum(P[lower:upper])
-
-    mnfreq = np.dot(P[lower:upper], f[lower:upper]) / pwr
-
-    return mnfreq
-
-def stft_psd(data:np.ndarray, fs:int):
-    '''Calculates the power spectral density of a sound recording.
+def meanfreq(pxx:np.ndarray, f:np.ndarray, freqrange:tuple[float]=None):
+    '''Calculates the mean frequenc of a power spectral density estimate.
 
     Parameters
     ----------
-    data:np.ndarray 
+    pxx: np.ndarray
+        The power spectral density estimate.
+    f: np.ndarray
+        Vector of the frequencies in pxx.
+    freqrange: tuple[float]
+        two-tuple of (lower, upper) frequency bounds. Defaults to None, which includes all frequencies.
+
+    Returns
+    -------
+    np.ndarray
+        A vector containing the mean frequency at each time step in pxx.
+    '''
+    width = np.tile(f[1]-f[0], (1, pxx.shape[0])).T
+    f = np.reshape(f, (-1, 1))
+    P = pxx * width
+    if freqrange:
+        lower = next((idx for idx, freq in enumerate(f) if freq > freqrange[0]), 0) - 1
+        upper = next((idx for idx, freq in enumerate(f) if freq > freqrange[1]), len(f))
+    else:
+        lower = 0
+        upper = f.shape[0]
+
+    pwr = np.sum(P[lower:upper], 0, keepdims=True).T
+
+    mnfreq = np.dot(P[lower:upper].T, f[lower:upper]) / pwr
+
+    return np.squeeze(mnfreq)
+
+def power_spectral_density(data:np.ndarray, fs:int):
+    '''Estimates the power spectral density of a sound recording. Resulting PSD matches that calculated by the Matlab spectrogram function.
+
+    Parameters
+    ----------
+    data:np.ndarray
         An array-like with shape (n, 1)
     fs:int
         The sampling frequency of the data
@@ -106,28 +122,28 @@ def stft_psd(data:np.ndarray, fs:int):
 
     Raises
     ------
-    AttributeError 
+    AttributeError
         if the data input is not a vector
     '''
     data = _ensure_np(data)
     window_length = fs
     window = get_window('hamming', window_length)
-    f, t, pxx = spectrogram(data, fs=fs, window=window, noverlap=window_length/2, mode='psd', 
-            scaling='density', nperseg=window_length, nfft=window_length, axis=0)
+    f, t, pxx = spectrogram(data, fs=fs, window=window, noverlap=window_length/2, mode='psd',
+            scaling='density', nperseg=window_length, nfft=window_length, axis=0, detrend=False)
 
     pxx = np.squeeze(pxx)
 
-    
-    return f[1:], t, pxx[1:] 
+
+    return f[1:], t, pxx[1:]
 
 def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
     '''Calculates the temporal dissimilarity between two sounds.
 
     Parameters
     ----------
-    data_a:np.ndarray 
+    data_a:np.ndarray
         an array-like with shape (n, 1)
-    data_b:np.ndarray 
+    data_b:np.ndarray
         an array-like with shape (n, 1)
 
     Returns
@@ -137,9 +153,9 @@ def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
 
     Raises
     ------
-    AttributeError 
+    AttributeError
         if either data input is not a vector
-    AttributeError 
+    AttributeError
         if the data input lengths are not the same
 
     Examples
@@ -170,6 +186,31 @@ def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
     return dt
 
 def spectral_dissimilarity(m_freq_a, m_freq_b):
+    '''Calculates the spectral dissimilarity between two mean frequency inputs.
+
+    Parameters
+    ----------
+    m_freq_:np.ndarray
+        an array-like with shape (n, 1)
+    m_freq_a:np.ndarray
+        an array-like with shape (n, 1)
+
+    Returns
+    -------
+    float
+        The spectral dissimilarity between the inputs
+
+    Raises
+    ------
+    AttributeError
+        if either data input is not a vector
+    AttributeError
+        if the data input lengths are not the same
+
+    Examples
+    -----
+    >>>import numpy as np
+    '''
     datas = []
     for mfreq in (m_freq_a, m_freq_b):
         tobs = np.abs(mfreq) / np.abs(mfreq).sum()
@@ -179,9 +220,9 @@ def spectral_dissimilarity(m_freq_a, m_freq_b):
 
     return df
 
-def dissimilarity_index(data_a:np.ndarray, 
-                        data_b:np.ndarray, 
-                        m_freq_a, 
+def dissimilarity_index(data_a:np.ndarray,
+                        data_b:np.ndarray,
+                        m_freq_a,
                         m_freq_b)->list:
     if data_a.shape != data_b.shape:
         raise AttributeError("Vectors must be the same size")
@@ -191,14 +232,10 @@ def dissimilarity_index(data_a:np.ndarray,
         data = _ensure_np(data)
         datas.append(data)
 
-    dts = temporal_dissimilarity(*datas)
-    dfs = spectral_dissimilarity(m_freq_a, m_freq_b)
+    dt = temporal_dissimilarity(*datas)
+    df = spectral_dissimilarity(m_freq_a, m_freq_b)
 
-    ret = []
-    for i, dt in enumerate(dts):
-        ret.append(dt * dfs[i])
-
-    return ret
+    return dt * df
 
 def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
     '''Calculates the maximum instantaneous sound pressure level for sound data.
@@ -208,7 +245,7 @@ def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
     data: np.ndarray
         an array-like with shape (n, 1)
     reference_sound_pressure: int
-        p_0 in uPa, defaults to 1 
+        p_0 in uPa, defaults to 1
 
     Returns
     -------
@@ -217,7 +254,7 @@ def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
 
     Raises
     ------
-    AttributeError: 
+    AttributeError:
         if either data input is not a vector
 
     Examples
@@ -226,7 +263,7 @@ def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
     >>>fs = 48000
     >>>sound = np.random.rand(fs*60,1)
     >>>ssc.max_spl(sound, fs)
-    -2.786002960850315e-06
+    >>>-2.786002960850315e-06
     '''
     data = _ensure_np(data)
     return 10 * log10((np.abs(data)**2).max() / reference_sound_pressure)
@@ -236,11 +273,11 @@ def rms_spl(data:np.ndarray, fs:int, reference_sound_pressure:int=1)->float:
 
     Parameters
     ----------
-    data: np.ndarray    
+    data: np.ndarray
         an array-like with shape (n, 1)
     fs: int
         the sampling frequency
-    reference_sound_pressure:int 
+    reference_sound_pressure:int
         p_0 in uPa, defaults to 1
 
     Returns
@@ -271,7 +308,7 @@ def kurtosis(data:np.ndarray)->float:
     ----------
     data: np.ndarray
         an array-like with shape (n, 1)
-    
+
     Returns
     -------
     float
@@ -279,7 +316,7 @@ def kurtosis(data:np.ndarray)->float:
 
     Raises
     ------
-    AttributeError 
+    AttributeError
         if either data input is not a vector
 
     Examples
@@ -301,9 +338,9 @@ def periodicity(data:np.ndarray, fs)->int:
 
     Parameters
     ----------
-    data: np.ndarray 
+    data: np.ndarray
         an array-like with shape (n, 1)
-    
+
     Returns
     -------
     int
