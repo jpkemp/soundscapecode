@@ -70,6 +70,8 @@ class TestSoundscapeCode(unittest.TestCase):
         expected = self.pxx_validation
         test = self.pxx
         self.assertEqual(expected.shape, test.shape)
+        self.assertEqual(self.t.shape[0], test.shape[1])
+        self.assertEqual(self.f.shape[0], test.shape[0])
         self.assertTrue(np.allclose(expected, test, 5))
 
     def test_mfreq(self):

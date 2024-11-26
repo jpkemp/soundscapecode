@@ -141,9 +141,9 @@ def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
 
     Parameters
     ----------
-    data_a:np.ndarray
+    data_a: np.ndarray
         an array-like with shape (n, 1)
-    data_b:np.ndarray
+    data_b: np.ndarray
         an array-like with shape (n, 1)
 
     Returns
@@ -160,12 +160,14 @@ def temporal_dissimilarity(data_a:np.ndarray, data_b:np.ndarray)->float:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>fs = 48000
-    >>>sound_a = np.random.rand(fs*60,1)
-    >>>sound_b = np.random.rand(fs*60,1)
-    >>>ssc.temporal_dissimilarity(sound_a, sound_b):
-    0.25869281943759737
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 48000
+    >>> sound_a = np.random.rand(fs*60,1)
+    >>> sound_b = np.random.rand(fs*60,1)
+    >>> ssc.temporal_dissimilarity(sound_a, sound_b)
+    0.2585992462980159
     '''
     datas = []
     for data in (data_a, data_b):
@@ -190,9 +192,9 @@ def spectral_dissimilarity(m_freq_a, m_freq_b):
 
     Parameters
     ----------
-    m_freq_:np.ndarray
+    m_freq_a: np.ndarray
         an array-like with shape (n, 1)
-    m_freq_a:np.ndarray
+    m_freq_b: np.ndarray
         an array-like with shape (n, 1)
 
     Returns
@@ -209,7 +211,17 @@ def spectral_dissimilarity(m_freq_a, m_freq_b):
 
     Examples
     -----
-    >>>import numpy as np
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 16000
+    >>> sound = np.random.rand(fs*60*3,1)
+    >>> f, t, pxx = ssc.power_spectral_density(sound, fs)
+    >>> m_freq = ssc.meanfreq(pxx, f)
+    >>> freq_a = m_freq[0:120] # half-second time steps
+    >>> freq_b = m_freq[120:240]
+    >>> ssc.spectral_dissimilarity(freq_a, freq_b)
+    0.006182274981624808
     '''
     datas = []
     for mfreq in (m_freq_a, m_freq_b):
@@ -222,8 +234,49 @@ def spectral_dissimilarity(m_freq_a, m_freq_b):
 
 def dissimilarity_index(data_a:np.ndarray,
                         data_b:np.ndarray,
-                        m_freq_a,
-                        m_freq_b)->list:
+                        m_freq_a:np.ndarray,
+                        m_freq_b:np.ndarray)->list:
+    '''Calculates the dissimilarity index between two sounds and the mean frequency inputs of the sounds.
+
+    Parameters
+    ----------
+    data_a:np.ndarray
+        an array-like with shape (n, 1)
+    data_b:np.ndarray
+        an array-like with shape (n, 1)
+    m_freq_a:np.ndarray
+        an array-like with shape (n, 1)
+    m_freq_a:np.ndarray
+        an array-like with shape (n, 1)
+
+    Returns
+    -------
+    float
+        The dissimilarity index, calculated from the temporal dissimilarity between data_a and data_b, and the spectral dissimilarity between m_freq_a and m_freq_b.
+
+    Raises
+    ------
+    AttributeError
+        if either data input is not a vector
+    AttributeError
+        if the data input lengths are not the same
+
+    Examples
+    -----
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 16000
+    >>> sound = np.random.rand(fs*60*3,1)
+    >>> data_a = sound[0:120]
+    >>> data_b = sound[120:240]
+    >>> f, t, pxx = ssc.power_spectral_density(sound, fs)
+    >>> m_freq = ssc.meanfreq(pxx, f)
+    >>> freq_a = m_freq[0:120] # half-second time steps
+    >>> freq_b = m_freq[120:240]
+    >>> ssc.dissimilarity_index(data_a, data_b, freq_a, freq_b)
+    0.001438456599369862
+    '''
     if data_a.shape != data_b.shape:
         raise AttributeError("Vectors must be the same size")
 
@@ -232,8 +285,13 @@ def dissimilarity_index(data_a:np.ndarray,
         data = _ensure_np(data)
         datas.append(data)
 
+    freqs = []
+    for freq in [m_freq_a, m_freq_b]:
+        freq = _ensure_np(freq)
+        freqs.append(freq)
+
     dt = temporal_dissimilarity(*datas)
-    df = spectral_dissimilarity(m_freq_a, m_freq_b)
+    df = spectral_dissimilarity(*freqs)
 
     return dt * df
 
@@ -259,11 +317,13 @@ def max_spl(data:np.ndarray, reference_sound_pressure:int=1)->float:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>fs = 48000
-    >>>sound = np.random.rand(fs*60,1)
-    >>>ssc.max_spl(sound, fs)
-    >>>-2.786002960850315e-06
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 48000
+    >>> sound = np.random.rand(fs*60,1)
+    >>> ssc.max_spl(sound, fs)
+    -46.8124147991551
     '''
     data = _ensure_np(data)
     return 10 * log10((np.abs(data)**2).max() / reference_sound_pressure)
@@ -284,6 +344,7 @@ def rms_spl(data:np.ndarray, fs:int, reference_sound_pressure:int=1)->float:
     -------
     float
         the RMS SPL
+
     Raises
     ------
     AttributeError
@@ -291,11 +352,13 @@ def rms_spl(data:np.ndarray, fs:int, reference_sound_pressure:int=1)->float:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>fs = 48000
-    >>>sound = np.random.rand(fs*60,1)
-    >>>ssc.rms_spl(sound, fs):
-    -4.77623486782825
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 48000
+    >>> sound = np.random.rand(fs*60,1)
+    >>> ssc.rms_spl(sound, fs)
+    -4.770500024074682
     '''
     data = _ensure_np(data)
     squared_sum = (data ** 2).sum()
@@ -321,11 +384,13 @@ def kurtosis(data:np.ndarray)->float:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>fs = 48000
-    >>>sound = np.random.rand(fs*60,1)
-    >>>ssc.kurtosis(sound)
-    1.800351902117281
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 48000
+    >>> sound = np.random.rand(fs*60,1)
+    >>> ssc.kurtosis(sound)
+    1.799334080600504
     '''
     data = _ensure_np(data)
     B = spkurtosis(data, fisher=False)
@@ -353,10 +418,12 @@ def periodicity(data:np.ndarray, fs)->int:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>fs = 48000
-    >>>sound = np.random.rand(fs*60,1)
-    >>>ssc.periodicity(sound, fs):
+    >>> import numpy as np
+    >>> np.random.seed(0)
+    >>> import soundscapecode as ssc
+    >>> fs = 48000
+    >>> sound = np.random.rand(fs*60,1)
+    >>> ssc.periodicity(sound, fs)
     1
     '''
     data = _ensure_np(data)
@@ -368,3 +435,7 @@ def periodicity(data:np.ndarray, fs)->int:
     n_peaks = len(peaks[0])
 
     return n_peaks
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

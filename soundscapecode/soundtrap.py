@@ -7,15 +7,18 @@ read_calibration(file_path:str)->CalibrationData:
     Read soundtrap calibration information from file
 
 get_soundtrap_calibration(serial:str, output_path:Path=None)->CalibrationData:
-    'Retrieve soundtrap information from OI and save to output path 
+    'Retrieve soundtrap information from OceanInstruments and save to output path
 
-sountrap_conversion(signal:np.ndarray, soundtrap:str)->np.ndarray:
+soundtrap_conversion(signal:np.ndarray, soundtrap:str)->np.ndarray:
     Convert raw soundtrap values to uPa
+
+open_wav(input_file:str, channel:int=None, trim_start:int=0, length:int=-1, soundtrap:int=None, normalise:bool=True)
+    Open and convert a wave file signal to dB.
 
 Classes
 -------
 CalibrationData
-    Dataclass for soundtrap calibration information    
+    Dataclass for soundtrap calibration information
 '''
 from dataclasses import dataclass
 import json
@@ -63,8 +66,8 @@ class CalibrationData:
     high: float
 
 def _convert_json_to_cal(data)->CalibrationData:
-    '''Converts OI soundtrap information to CalibrationData
-    
+    '''Converts OceanInstruments soundtrap information to CalibrationData
+
     Parameters
     ----------
     data:
@@ -73,7 +76,7 @@ def _convert_json_to_cal(data)->CalibrationData:
     Returns
     -------
     CalibrationData:
-        the soundtrap information object    
+        the soundtrap information object
     '''
     ret = CalibrationData(
         serial = data["Serial No"],
@@ -96,7 +99,7 @@ def read_calibration(file_path:str)->CalibrationData:
     Parameters
     ----------
     file_path:str
-        the file with the sountrap information 
+        the file with the sountrap information
 
     Returns
     -------
@@ -106,7 +109,7 @@ def read_calibration(file_path:str)->CalibrationData:
     Raises
     ------
     FileNotFoundError:
-        the given path does not exist     
+        the given path does not exist
     '''
     if not Path(file_path).exists():
         raise FileNotFoundError(f"Cannot find file {file_path}")
@@ -117,19 +120,19 @@ def read_calibration(file_path:str)->CalibrationData:
     return _convert_json_to_cal(data)
 
 def get_soundtrap_calibration(serial:str, output_path:Path=None)->CalibrationData:
-    '''Retrieve soundtrap information from OI and save to output path 
+    '''Retrieve soundtrap information from OceanInstruments and save to output path
 
     Parameters
     ----------
     serial: int/str
         the soundtrap ID
     output_path: str/Path
-        path to save the information to 
+        path to save the information to
 
     Returns
     -------
     CalibrationData:
-        the soundtrap calibration information from OI
+        the soundtrap calibration information from OceanInstruments
     '''
     url = f"http://oceaninstruments.azurewebsites.net/api/Devices/Search/{serial}"
     device = requests.get(url)
@@ -188,12 +191,12 @@ def soundtrap_conversion(signal:np.ndarray, soundtrap:str)->np.ndarray:
 
         Parameters
         ----------
-        signal:np.ndarray 
+        signal:np.ndarray
             signal to convert (iterable)
-        sountrap:int/str 
-            soundtrap ID. if int, reads from OI website. if str, reads from file
+        sountrap:int/str
+            soundtrap ID. if int, reads OceanInstruments website. if str, reads from file
 
-        Returns 
+        Returns
         -------
         converted signal
     '''
@@ -208,12 +211,12 @@ def soundtrap_conversion(signal:np.ndarray, soundtrap:str)->np.ndarray:
 
 def _normalise_sound(data, data_format):
     '''Scales data to range [-1, 1] based on the wav format
-    
+
     Parameters
     ---------
     data:np.ndarray
     data_format
-    
+
     Returns
     -------
     np.ndarray
@@ -223,7 +226,7 @@ def _normalise_sound(data, data_format):
             return 0.0
         if x > 0:
             return float(x) /np.iinfo(data_format).max
-        
+
         return float(x) / abs(np.iinfo(data_format).min)
 
     conv = np.vectorize(temp)
@@ -234,18 +237,18 @@ def open_wav(input_file:str, channel:int=None, trim_start:int=0, length:int=-1, 
 
         Parameters
         ----------
-        input_file: 
+        input_file:
             file to open
-        channel:int 
+        channel:int
             channel to use in a multi-channel file. Defaults to None, which uses channel 1
         trim_start: int
             cut the start of a file (in seconds)
         length: int
             length of the signal to keep (in seconds). Defaults to -1, which keeps the whole file
         soundtrap: int or str
-            soundtrap ID for calibration. if int, retrieves the data from the OI website. if str, loads the data from file
+            soundtrap ID for calibration. if int, retrieves the data from the OceanInstruments website. if str, loads the data from file
 
-        Returns 
+        Returns
         -------
         tuple
             (fs, signal) where fs is the sampling frequency and signal is the loaded sound

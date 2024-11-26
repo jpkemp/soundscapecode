@@ -13,13 +13,13 @@ class SoundscapeCode:
 
     Examples
     -----
-    >>>import numpy as np
-    >>>from soundscapecode import SoundscapeCode
-    >>>fs = 48000
-    >>>n_mins = 3
-    >>>sound = np.random.rand(fs*n_mins*60,1)
-    >>>soundscape = SoundscapeCode(sound, fs)
-    >>>for pk_spl in soundscape["max_spl"]:
+    >>> import numpy as np
+    >>> from soundscapecode import SoundscapeCode
+    >>> fs = 48000
+    >>> n_mins = 3
+    >>> sound = np.random.rand(fs*n_mins*60,1)
+    >>> soundscape = SoundscapeCode(sound, fs)
+    >>> for pk_spl in soundscape["max_spl"]:
     ...    print(pk_spl)
     -2.786002960850315e-06
     -6.53336810900092e-06
@@ -53,7 +53,7 @@ class SoundscapeCode:
             return self.Lppk
         if lower in ["dt", "temporal", "temporal_dissimilarity", "dissimilarity_temporal"]:
             return self.temporal_dissimilarities
-        
+
         return NotImplemented
 
     def _calculate_metrics(self):

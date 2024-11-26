@@ -5,3 +5,8 @@
 .toctree-l1 > a {
    font-size: 1.2em;
 }
+
+.wy-nav-content {
+    max-width: none;
+    width: fit-content;
+}
