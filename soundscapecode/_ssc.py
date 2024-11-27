@@ -7,7 +7,27 @@ class SoundscapeCode:
     Attributes
     ----------
     sound: np.ndarray
-        the sound recording to calculate the metrics for
+        the given sound recording from which the metrics were calculated
+    fs: int
+        sampling frequency for the sound
+    freq_range: tuple
+        frequency range for spectral dissimilarity, if given
+    Lppk: list
+        Peak SPL values at one-minute intervals
+    Lprms: list
+        Root mean squared SPL values at one-minute intervals
+    kurtosis: list
+        kurtosis values at one-minute intervals
+    periodicity: list
+        periodicity values at one-minute intervals
+    temporal_dissimilarities: list
+        temporal dissimilarities between consecutive one-minute intervals
+    spectral_dissimilarities: list
+        spectral dissimilarities between consecutive one-minute intervals
+    spectral_dissimilarities: list
+        spectral dissimilarities between consecutive one-minute intervals
+    dissimilarities: list
+        dissimilarity index between consecutive one-minute intervals
 
     Examples
     -----
