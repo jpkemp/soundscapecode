@@ -119,4 +119,6 @@ class SoundscapeCode:
             spectral_dissimilarity = ssc.spectral_dissimilarity(a, b)
             self.spectral_dissimilarities.append(spectral_dissimilarity)
 
-        self.dissimilarities = list(np.array(self.temporal_dissimilarities) * np.array(self.spectral_dissimilarities))
+        max_idx = min(len(self.temporal_dissimilarities), len(self.spectral_dissimilarities))
+        self.dissimilarities = list(np.array(self.temporal_dissimilarities[:max_idx]) * 
+                                    np.array(self.spectral_dissimilarities[:max_idx]))
