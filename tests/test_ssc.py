@@ -119,7 +119,8 @@ class TestSoundscapeCode(unittest.TestCase):
     def test_ssc(self):
         for band, sounds in self.sounds.items():
             full_sound = np.concatenate(sounds)
-            soundscape = SoundscapeCode(full_sound, self.fs)
+            freq_range = self.freq_ranges[band]
+            soundscape = SoundscapeCode(full_sound, self.fs, freq_range)
             self.assertEqual(soundscape.fs, self.fs)
             n = 5
             self.assertEqual(len(soundscape.sounds), n)
@@ -140,3 +141,13 @@ class TestSoundscapeCode(unittest.TestCase):
             for i, expected in enumerate(expecteds[:3]):
                 test = round(soundscape['dt'][i],4)
                 self.assertEqual(test, expected)
+
+            expecteds = self.d_validation[f"Df_{band}_Tobs"]
+            for i, expected in enumerate(expecteds[:3]):
+                test = round(soundscape['df'][i],4)
+                self.assertAlmostEqual(test, expected, 2)
+
+            expecteds = self.validation[f"Files_D_{band}"]
+            for i, expected in enumerate(expecteds[:3]):
+                test = round(soundscape['d'][i],4)
+                self.assertAlmostEqual(test, expected, 2)
