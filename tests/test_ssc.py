@@ -119,7 +119,7 @@ class TestSoundscapeCode(unittest.TestCase):
     def test_ssc(self):
         for band, sounds in self.sounds.items():
             full_sound = np.concatenate(sounds)
-            freq_range = (200, 24000)
+            freq_range = self.freq_ranges[band]
             soundscape = SoundscapeCode(full_sound, self.fs, freq_range)
             self.assertEqual(soundscape.fs, self.fs)
             n = 5
