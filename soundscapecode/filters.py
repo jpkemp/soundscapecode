@@ -94,23 +94,21 @@ def highpass(data, passband:tuple, fs:int, steepness=0.85, stopband_atten=60):
         raise ValueError("Steepness must be between 0.5 and 1")
 
     TwPercentage = -0.98*steepness + 0.99
-    ripple = 0.1
-    sig_len = len(data)
+    # ripple = 0.1
     WpassNormalized = passband/(fs/2)
     Tw =TwPercentage * WpassNormalized
     WstopNormalized = WpassNormalized - Tw
-    stopband_atten_linear = convert_mag_units(stopband_atten, 'db', 'linear', 'stop')
-    passband_ripple_linear = convert_mag_units(ripple, 'db', 'linear', 'pass')
+    # stopband_atten_linear = convert_mag_units(stopband_atten, 'db', 'linear', 'stop')
+    # passband_ripple_linear = convert_mag_units(ripple, 'db', 'linear', 'pass')
     Wstop = WstopNormalized * (fs / 2)
     trans_width = passband - Wstop
 
     numtaps, beta = kaiserord(stopband_atten, trans_width/(0.5*fs))
     mid_freq = passband - (trans_width / 2)
-    taps = firwin(numtaps, mid_freq, width=trans_width, window=('kaiser', beta), scale=False, fs=fs, pass_zero=True)
-    taps = -taps
-    return taps
+    taps = firwin(numtaps, mid_freq, width=trans_width, scale=True, fs=fs, pass_zero='highpass')
+    # taps = firwin(numtaps, mid_freq, window=('kaiser', beta), scale=True, fs=fs, pass_zero='highpass')
     delay = floor(numtaps / 2)
     temp_data = np.concatenate([data, np.zeros(delay)])
     fltrd = lfilter(taps, 1, temp_data)[delay:]
 
-    pass
+    return fltrd

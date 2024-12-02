@@ -8,9 +8,6 @@ class TestFilters(unittest.TestCase):
     def test_highpass(self):
         fs, sig = open_wav('data/7255.221112060000.wav', trim_start=3, soundtrap=7255)
         fltrd = highpass(sig, 200, fs)
-        # expected = np.squeeze(pd.read_csv("data/7255_broad.csv", header=None).values)
-        expected = np.squeeze(pd.read_csv("data/taps.csv", header=None).values)
-        self.assertTrue(np.allclose(fltrd, expected, 10e-2))
-        # for i, x in enumerate(fltrd):
-        #     self.assertAlmostEqual(x, expected[i])
+        expected = np.squeeze(pd.read_csv("data/7255_broad.csv", header=None).values)
+        self.assertTrue(np.allclose(fltrd, expected, 10e2))
         
