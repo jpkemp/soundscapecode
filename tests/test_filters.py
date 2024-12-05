@@ -13,11 +13,11 @@ class TestFilters(unittest.TestCase):
     def test_highpass(self):
         fltrd = highpass(self.sig, 200, self.fs)
         expected = np.squeeze(pd.read_csv("data/7255_broad.csv", header=None).values)
-        self.assertTrue(np.allclose(fltrd, expected, 10e2))
+        self.assertTrue(np.allclose(fltrd, expected, atol=10e1))
 
     def test_bandpass(self):
         for fl, freqs in [("data/7255_fish.csv", (200, 800)), 
                           ("data/7255_invertebrate.csv", (2000, 5000))]:
             expected = np.squeeze(pd.read_csv(fl, header=None).values)
             fltrd = bandpass(self.sig, *freqs, self.fs)
-            self.assertTrue(np.allclose(fltrd, expected, 10e2))
+            self.assertTrue(np.allclose(fltrd, expected, atol=10e1))

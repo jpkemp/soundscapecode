@@ -72,14 +72,14 @@ class TestSoundscapeCode(unittest.TestCase):
         self.assertEqual(expected.shape, test.shape)
         self.assertEqual(self.t.shape[0], test.shape[1])
         self.assertEqual(self.f.shape[0], test.shape[0])
-        self.assertTrue(np.allclose(expected, test, 5))
+        self.assertTrue(np.allclose(expected, test, rtol=10e-1))
 
     def test_mfreq(self):
         for band, freq_range in self.freq_ranges.items():
             expected = self.mean_freqs[band]
             mfreq = ssc.meanfreq(self.pxx, self.f, freq_range)
             self.assertEqual(expected.shape, mfreq.shape)
-            self.assertTrue(np.allclose(expected, mfreq, 5))
+            self.assertTrue(np.allclose(expected, mfreq, rtol=10e-4))
 
     def test_spectral_dissimilarity(self):
         for band, freq_range in self.freq_ranges.items():
