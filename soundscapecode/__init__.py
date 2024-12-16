@@ -31,8 +31,14 @@ dissimilarity index:
 Classes
 -------
 SoundscapeCode: wrapper for calculating all metrics for all one-minute segments in a longer recording
+
+Modules
+-------
+soundtrap: utilities for working with soundtraos
+filters: highpass and bandpass filters
 '''
 from ._soundscape_code import periodicity, max_spl, rms_spl, kurtosis, temporal_dissimilarity, \
     power_spectral_density, meanfreq, spectral_dissimilarity, dissimilarity_index
 from ._ssc import SoundscapeCode
 from . import soundtrap
+from . import filters
