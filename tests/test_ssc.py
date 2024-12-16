@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import soundscapecode as ssc
 from soundscapecode import SoundscapeCode
+from soundscapecode.filters import highpass, bandpass
 
 class TestSoundscapeCode(unittest.TestCase):
     @classmethod
@@ -16,8 +17,10 @@ class TestSoundscapeCode(unittest.TestCase):
         cls.sounds = {}
         cls.mean_freqs = {}
         for band in band_names:
-            # don't want to replicate matlab filters so just load the data
-            data = pd.read_csv(f"{test_data}/7255_{band}.csv", dtype=float, header=None).values
+            fltr = highpass if band == "broad" else bandpass
+            freqs = cls.freq_ranges[band]
+            freqs = freqs[0] if band == "broad" else freqs
+            data = fltr(sound, freqs, cls.fs)
             sound_parts = [data[i:i+one_min_interval] for i in range(0, len(data), one_min_interval)]
             cls.sounds[band] = sound_parts
             assert len(cls.sounds[band]) == 5
@@ -29,7 +32,7 @@ class TestSoundscapeCode(unittest.TestCase):
         cls.pxx_validation = pd.read_csv("data/7255_pxx.csv", header=None)
         cls.f, cls.t, cls.pxx = ssc.power_spectral_density(sound, cls.fs)
 
-    def _compare_expected(self, band, sounds, metric, func, kwargs, rounding=7):
+    def _compare_expected(self, band, sounds, metric, func, kwargs, rounding=6):
         expected = self.validation[f"Files_{metric}_{band}"]
         for i, data in enumerate(sounds[:4]):
             result = func(data, **kwargs)

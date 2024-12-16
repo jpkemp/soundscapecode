@@ -17,7 +17,10 @@ This implementation is ported from a Matlab `example`_.
 .. _paper: https://pubs.aip.org/asa/jasa/article/149/4_Supplement/A72/651895/Introduction-and-application-of-a-proposed-method
 .. _example: https://www.mathworks.com/matlabcentral/fileexchange/172434-sscmetrics-a-matlab-tool-to-compute-the-soundscape-code
 
-Additionally, the soundscapecode.soundtrap sub-module is provided for working with data from soundtrap hydrophones.
+Additionally, two sub-modules are provided:
+
+* soundscapecode.soundtrap contains utilities for working with data from soundtrap hydrophones.
+* soundscapecode.filters contains a highpass and bandpass filter compatible with Matlab filters of the same names.
 
 .. include:: usage.rst
 
@@ -42,3 +45,5 @@ Additionally, the soundscapecode.soundtrap sub-module is provided for working wi
    soundtrap.get_soundtrap_calibration
    soundtrap.read_calibration
    soundtrap.open_wav
+   filters.highpass
+   filters.bandpass
