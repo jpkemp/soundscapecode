@@ -210,7 +210,7 @@ def soundtrap_conversion(signal:np.ndarray, soundtrap:str)->np.ndarray:
     return signal * ratio
 
 def _normalise_sound(data, data_format):
-    '''Scales data to range [-1, 1] based on the wav format
+    '''Scales data based on the wav format, to either [-1, 1] (general) or [-1, 1) (int16)
 
     Parameters
     ---------
@@ -221,6 +221,9 @@ def _normalise_sound(data, data_format):
     -------
     np.ndarray
     '''
+    if data_format == np.int16:
+        return data / abs(np.iinfo(data_format).min)
+
     def temp(x):
         if not x:
             return 0.0
