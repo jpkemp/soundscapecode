@@ -67,7 +67,7 @@ def _get_passbands(passbands, filter_type, nyquist):
     elif filter_type == "bandpass":
         return [(passbands[0], passbands[1])]
     elif filter_type == "highpass":
-        return [passbands[0], nyquist]
+        return [(passbands[0], nyquist)]
     else:
         raise UnknownFilterType(filter_type)
 
