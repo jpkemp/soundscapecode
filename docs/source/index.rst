@@ -22,6 +22,11 @@ Additionally, two sub-modules are provided:
 * soundscapecode.soundtrap contains utilities for working with data from soundtrap hydrophones.
 * soundscapecode.filters contains a highpass and bandpass filter compatible with Matlab filters of the same names.
 
+If you use this package in your research, please cite it using the DOI:
+
+.. image:: https://zenodo.org/badge/891216446.svg
+  :target: https://doi.org/10.5281/zenodo.14613305
+
 .. include:: usage.rst
 
 .. autosummary::

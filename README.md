@@ -2,6 +2,8 @@
 
 Python implementation of the soundscape code [[1]](#1), ported from a Matlab example [[2]](#2).
 
+If you use this package in your research, please cite it using the DOI: <br> [![DOI](https://zenodo.org/badge/891216446.svg)](https://doi.org/10.5281/zenodo.14613305)
+
 ## Installation
 ```
 pip install soundscapecode
